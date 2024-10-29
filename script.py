@@ -13,7 +13,7 @@ def process_image(img_path, img_size=(28, 28)):
     # Flatten a imagem para um vetor 1D
     return img.flatten()
 
-def save_images_to_txt(class_folders, train_file, test_file, img_size=(10, 10), test_size=0.2):
+def save_images_to_txt(class_folders, train_file, test_file, img_size=(28, 28), test_size=0.2):
     # Abrir os arquivos de saída para treino e teste
     with open(train_file, 'w') as train_f, open(test_file, 'w') as test_f:
         for label, folder in enumerate(class_folders):
