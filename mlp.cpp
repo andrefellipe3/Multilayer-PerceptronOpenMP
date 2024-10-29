@@ -34,12 +34,16 @@ mlp::mlp(){
 	//preenche matrizes de pesos e biases com numeros pseudoaleatorios entre -0.5 e 0.5
 	int i, j;
 	srand(time(0));
+	#pragma omp parallel for
 	for(i=0;i<hidLength;i++){
+		#pragma omp parallel for
 		for(j=0;j<(inLength+1);j++){
 			matH[i][j] = 2.0f * ((float)rand() / (2.0f * (float)RAND_MAX)) - 0.5f;
 		}
 	}
+	#pragma omp parallel for
 	for(i=0;i<outLength;i++){
+		#pragma omp parallel for
 		for(j=0;j<(hidLength+1);j++){
 			matO[i][j] = 2.0f * ((float)rand() / (2.0f * (float)RAND_MAX)) - 0.5f;
 		}
