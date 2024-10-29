@@ -9,7 +9,7 @@
 #include "mlp.hpp"
 
 using namespace std;
-#pragma omp num_threads(2)
+#pragma omp num_threads(4)
 
 int main()
 {
