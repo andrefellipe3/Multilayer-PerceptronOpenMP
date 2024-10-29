@@ -3,7 +3,7 @@ import numpy as np
 import os
 from sklearn.model_selection import train_test_split
 
-def process_image(img_path, img_size=(28, 28)):
+def process_image(img_path, img_size=(10, 10)):
     # Carregar a imagem e converter para escala de cinza
     img = cv2.imread(img_path, cv2.IMREAD_GRAYSCALE)
     # Redimensionar a imagem para o tamanho especificado
