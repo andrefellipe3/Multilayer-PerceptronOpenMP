@@ -77,33 +77,30 @@ float mlp::activFuncDeriv(float z){
 	return (z*(1.0 - z));
 }
 
-void mlp::forward(float* inVector){
-	int i, j;
-	float totalH = 0, totalO = 0;
+void mlp::forward(float* inVector) {
+    int i, j;
+    
+    #pragma omp parallel for
+    for (i = 0; i < hidLength; i++) {
+        float totalH = 0; // Declara dentro do escopo do loop para evitar conflitos
+        for (j = 0; j < inLength; j++) {
+            totalH += matH[i][j] * inVector[j];
+        }
+        totalH += matH[i][inLength]; // Bias
+        hidResult[i] = activFunc(totalH);
+    }
 
-   #pragma omp parallel for simd reduction(+:totalH)
-	for(i=0;i<hidLength;i++)
-	{
-		totalH = 0;
-		for(j=0;j<(inLength);j++)
-		{
-			totalH += matH[i][j] * inVector[j]; // + w*x
-		}
-		 totalH += matH[i][inLength]; // + bias
-		 hidResult[i] = activFunc(totalH);
-	}
-     #pragma omp parallel for simd reduction(+:totalO)
-	for(i=0;i<outLength;i++)
-	{
-		totalO = 0;
-		for(j=0;j<hidLength;j++)
-		{
-			totalO += matO[i][j] * hidResult[j]; // + w*z
-		}
-		totalO += matO[i][hidLength]; // + bias
-		outResult[i] = activFunc(totalO);
-	}
+    #pragma omp parallel for
+    for (i = 0; i < outLength; i++) {
+        float totalO = 0; // Declara dentro do escopo do loop para evitar conflitos
+        for (j = 0; j < hidLength; j++) {
+            totalO += matO[i][j] * hidResult[j];
+        }
+        totalO += matO[i][hidLength]; // Bias
+        outResult[i] = activFunc(totalO);
+    }
 }
+
 
 void mlp::backpropagation(float X[][inLength], float Y[][outLength], int qtTrainCases){
 	int i, j, k;
