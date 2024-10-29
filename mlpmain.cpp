@@ -4,13 +4,15 @@
 #include<math.h>
 #include<string.h>
 #include<time.h>
-
+#include<omp.h>
 //BIBLIOTECA COM CLASSES E FUNCOES DO MLP
 #include "mlp.hpp"
 
 using namespace std;
 
-int main(){
+int main()
+{
+    #pragma omp num_threads(1)
 	int i, j, k=0, qtTestCases=0, qtTrainCases=0;
 	char c;
 	float vec[inLength] = {0};
@@ -31,11 +33,15 @@ int main(){
 	float X[qtTrainCases][inLength], Y[qtTrainCases][outLength];
 
 	//preenchendo matrizes com dados do trainDataset
-	for(i=0;i<qtTrainCases;i++){
-		for(j=0;j<inLength;j++){
+	#pragma omp paralell for
+	for(i=0;i<qtTrainCases;i++)
+	{
+		for(j=0;j<inLength;j++)
+		{
 			fscanf(trainDataset, "%f", &X[i][j]);
 		}
-		for(j=0;j<outLength;j++){
+		for(j=0;j<outLength;j++)
+		{
 			fscanf(trainDataset, "%f", &Y[i][j]);
 		}
 	}
