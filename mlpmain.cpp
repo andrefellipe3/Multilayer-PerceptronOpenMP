@@ -9,10 +9,11 @@
 #include "mlp.hpp"
 
 using namespace std;
+#pragma omp num_threads(2)
 
 int main()
 {
-    #pragma omp num_threads(1)
+
 	int i, j, k=0, qtTestCases=0, qtTrainCases=0;
 	char c;
 	float vec[inLength] = {0};

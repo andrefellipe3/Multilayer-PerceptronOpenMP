@@ -8,7 +8,7 @@
 
 //BIBLIOTECA COM CLASSES DO MLP
 #include "mlp.hpp"
-
+#pragma omp num_threads(2)
 using namespace std;
 
 
