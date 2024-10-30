@@ -34,7 +34,6 @@ int main()
 	float X[qtTrainCases][inLength], Y[qtTrainCases][outLength];
 
 	//preenchendo matrizes com dados do trainDataset
-	#pragma omp paralell for
 	for(i=0;i<qtTrainCases;i++)
 	{
 		for(j=0;j<inLength;j++)
