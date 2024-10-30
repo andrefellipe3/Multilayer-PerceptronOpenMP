@@ -8,7 +8,7 @@
 
 //BIBLIOTECA COM CLASSES DO MLP
 #include "mlp.hpp"
-#pragma omp num_threads(8)
+#pragma omp num_threads(2)
 using namespace std;
 
 
@@ -47,9 +47,11 @@ mlp::mlp()
 		}
 	}
 	#pragma omp parallel for
-	for(i=0;i<outLength;i++){
+	for(i=0;i<outLength;i++)
+	{
 		#pragma omp parallel for
-		for(j=0;j<(hidLength+1);j++){
+		for(j=0;j<(hidLength+1);j++)
+		{
 			matO[i][j] = 2.0f * ((float)rand() / (2.0f * (float)RAND_MAX)) - 0.5f;
 		}
 	}
@@ -77,13 +79,16 @@ float mlp::activFuncDeriv(float z){
 	return (z*(1.0 - z));
 }
 
-void mlp::forward(float* inVector) {
+void mlp::forward(float* inVector) 
+{
     int i, j;
     
     #pragma omp parallel for
-    for (i = 0; i < hidLength; i++) {
+    for (i = 0; i < hidLength; i++) 
+	{
         float totalH = 0; // Declara dentro do escopo do loop para evitar conflitos
-        for (j = 0; j < inLength; j++) {
+        for (j = 0; j < inLength; j++) 
+		{
             totalH += matH[i][j] * inVector[j];
         }
         totalH += matH[i][inLength]; // Bias
@@ -91,9 +96,11 @@ void mlp::forward(float* inVector) {
     }
 
     #pragma omp parallel for
-    for (i = 0; i < outLength; i++) {
+    for (i = 0; i < outLength; i++) 
+	{
         float totalO = 0; // Declara dentro do escopo do loop para evitar conflitos
-        for (j = 0; j < hidLength; j++) {
+        for (j = 0; j < hidLength; j++) 
+		{
             totalO += matO[i][j] * hidResult[j];
         }
         totalO += matO[i][hidLength]; // Bias
@@ -102,7 +109,8 @@ void mlp::forward(float* inVector) {
 }
 
 
-void mlp::backpropagation(float X[][inLength], float Y[][outLength], int qtTrainCases){
+void mlp::backpropagation(float X[][inLength], float Y[][outLength], int qtTrainCases)
+{
 	int i, j, k;
 	float inVector[inLength] = {0};
 	float erro, sum, erroMLP = 2*threshold;
@@ -112,41 +120,51 @@ void mlp::backpropagation(float X[][inLength], float Y[][outLength], int qtTrain
 
 		erroMLP = 0;
 
-		for(i=0;i<qtTrainCases;i++){
+        #pragma omp parallel for reduction(+:erroMLP) private(inVector, erro, sum, deltaHid, deltaOut)
+		for(i=0;i<qtTrainCases;i++)
+		{
 
 			//feedforward para a linha i do dataset
-			for(j=0;j<inLength;j++){
+			for(j=0;j<inLength;j++)
+			{
 				inVector[j] = X[i][j];
 			}
 			forward(inVector);
 
 			//calculo do delta de cada neuronio da camada output
-			for(j=0;j<outLength;j++){
+			for(j=0;j<outLength;j++)
+			{
 				erro = Y[i][j] - outResult[j];
 				erroMLP += pow(erro, 2);
 				deltaOut[j] = -2 * erro * activFuncDeriv(outResult[j]);
 			}
 
 			//calculo do delta de cada neuronio da camada hidden
-			for(j=0;j<hidLength;j++){
+			for(j=0;j<hidLength;j++)
+			{
 				sum = 0;
-				for(k=0;k<outLength;k++){
+				for(k=0;k<outLength;k++)
+				{
 					sum += deltaOut[k] * matO[k][j];
 				}
 				deltaHid[j] = sum * activFuncDeriv(hidResult[j]);
 			}
 
 			//atualizacao de pesos e bias da camada hidden
-			for(j=0;j<hidLength;j++){
-				for(k=0;k<inLength;k++){
+			for(j=0;j<hidLength;j++)
+			{
+				for(k=0;k<inLength;k++)
+				{
 					matH[j][k] = matH[j][k] - learningRate * deltaHid[j] * inVector[k];
 				}
 				matH[j][k] = matH[j][k] - learningRate * deltaHid[j];
 			}
 
 			//atualizacao de pesos e bias da camada output
-			for(j=0;j<outLength;j++){
-				for(k=0;k<hidLength;k++){
+			for(j=0;j<outLength;j++)
+			{
+				for(k=0;k<hidLength;k++)
+				{
 					matO[j][k] = matO[j][k] - learningRate * deltaOut[j] * hidResult[k];
 				}
 				matO[j][hidLength] = matO[j][hidLength] - learningRate * deltaOut[j];
