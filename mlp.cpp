@@ -37,7 +37,7 @@
 		//preenche matrizes de pesos e biases com numeros pseudoaleatorios entre -0.5 e 0.5
 		int i, j;
 		srand(time(0));
-		#pragma omp parallel for
+
 		for(i=0;i<hidLength;i++)
 		{
 
@@ -46,7 +46,7 @@
 				matH[i][j] = 2.0f * ((float)rand() / (2.0f * (float)RAND_MAX)) - 0.5f;
 			}
 		}
-		#pragma omp parallel for
+
 		for(i=0;i<outLength;i++)
 		{
 
@@ -60,8 +60,10 @@
 	void mlp::printResult(){
 		int k;
 		printf("RESULTADO = [");
-		for(k=0;k<outLength;k++){
-			if(k == outLength-1){
+		for(k=0;k<outLength;k++)
+		{
+			if(k == outLength-1)
+			{
 				printf("%.1f]\n", outResult[k]);
 			}else{
 				printf("%.1f, ", outResult[k]);
@@ -83,7 +85,7 @@
 	{
 		int i, j;
 		
-		#pragma omp parallel for
+
 		for (i = 0; i < hidLength; i++) 
 		{
 			float totalH = 0; // Declara dentro do escopo do loop para evitar conflitos
@@ -95,7 +97,7 @@
 			hidResult[i] = activFunc(totalH);
 		}
 
-		#pragma omp parallel for
+
 		for (i = 0; i < outLength; i++) 
 		{
 			float totalO = 0; // Declara dentro do escopo do loop para evitar conflitos
