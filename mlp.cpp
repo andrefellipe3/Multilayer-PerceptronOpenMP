@@ -33,12 +33,11 @@
 	//MLP CLASS
 	mlp::mlp()
 	{
-		omp_set_num_threads(numeroThreads);
+
 		//preenche matrizes de pesos e biases com numeros pseudoaleatorios entre -0.5 e 0.5
 		int i, j;
 		srand(time(0));
-       #pragma omp target map(from:matH)
-       #pragma omp target teams distribute parallel for collapse(2)  
+
 		for(i=0;i<hidLength;i++)
 		{
 
@@ -48,8 +47,6 @@
 			}
 		}
 
-       #pragma omp target map(from:matO)
-       #pragma omp target teams distribute parallel for collapse(2)  
 		for(i=0;i<outLength;i++)
 		{
 
@@ -87,8 +84,10 @@
 	void mlp::forward(float* inVector) 
 	{
 		int i, j;
+		omp_set_num_threads(numeroThreads);
 		
-
+        #pragma omp target map(to: matH, inVector) map(tofrom: hidResult)
+		#pragma omp teams distribute parallel for
 		for (i = 0; i < hidLength; i++) 
 		{
 			float totalH = 0; // Declara dentro do escopo do loop para evitar conflitos
@@ -101,7 +100,8 @@
 			hidResult[i] = activFunc(totalH);
 		}
 
-
+        #pragma omp target map(to: matO) map(tofrom: outResult, hidResult)
+		#pragma omp teams distribute parallel for
 		for (i = 0; i < outLength; i++) 
 		{
 			float totalO = 0; // Declara dentro do escopo do loop para evitar conflitos
