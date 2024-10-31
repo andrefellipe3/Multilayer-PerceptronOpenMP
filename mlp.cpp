@@ -5,7 +5,7 @@
 	#include<string.h>
 	#include<time.h>
 	#include<omp.h>
-    int numeroThreads = 4;
+    int numeroThreads = 2;
 	//BIBLIOTECA COM CLASSES DO MLP
 	#include "mlp.hpp"
 	using namespace std;
@@ -33,12 +33,12 @@
 	//MLP CLASS
 	mlp::mlp()
 	{
-	
+		omp_set_num_threads(numeroThreads);
 		//preenche matrizes de pesos e biases com numeros pseudoaleatorios entre -0.5 e 0.5
 		int i, j;
 		srand(time(0));
         
-
+       #pragma omp target teams distribute parallel for collapse(2) map(to: matH)       
 		for(i=0;i<hidLength;i++)
 		{
 
@@ -47,7 +47,8 @@
 				matH[i][j] = 2.0f * ((float)rand() / (2.0f * (float)RAND_MAX)) - 0.5f;
 			}
 		}
-
+		
+        #pragma omp target teams distribute parallel for collapse(2) map(to: matH)
 		for(i=0;i<outLength;i++)
 		{
 
