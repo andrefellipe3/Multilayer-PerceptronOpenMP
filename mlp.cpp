@@ -33,7 +33,7 @@
 	//MLP CLASS
 	mlp::mlp()
 	{
-		omp_set_num_threads(8);
+		omp_set_num_threads(2);
 		//preenche matrizes de pesos e biases com numeros pseudoaleatorios entre -0.5 e 0.5
 		int i, j;
 		srand(time(0));
