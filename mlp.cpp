@@ -37,8 +37,8 @@
 		//preenche matrizes de pesos e biases com numeros pseudoaleatorios entre -0.5 e 0.5
 		int i, j;
 		srand(time(0));
-        
-       #pragma omp target teams distribute parallel for collapse(2) map(to: matH)       
+       #pragma omp target map(from:matH)
+       #pragma omp target teams distribute parallel for collapse(2)  
 		for(i=0;i<hidLength;i++)
 		{
 
@@ -47,8 +47,9 @@
 				matH[i][j] = 2.0f * ((float)rand() / (2.0f * (float)RAND_MAX)) - 0.5f;
 			}
 		}
-		
-        #pragma omp target teams distribute parallel for collapse(2) map(to: matH)
+
+       #pragma omp target map(from:matO)
+       #pragma omp target teams distribute parallel for collapse(2)  
 		for(i=0;i<outLength;i++)
 		{
 
