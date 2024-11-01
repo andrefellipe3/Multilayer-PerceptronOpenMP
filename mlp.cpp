@@ -142,7 +142,6 @@
 				}
 
 				//calculo do delta de cada neuronio da camada hidden
-				#pragma omp parallel for
 				for(j=0;j<hidLength;j++)
 				{
 					sum = 0;
