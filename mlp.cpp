@@ -84,10 +84,8 @@
 	void mlp::forward(float* inVector) 
 	{
 		int i, j;
-		omp_set_num_threads(numeroThreads);
 		
 
-		#pragma omp teams distribute parallel for
 		for (i = 0; i < hidLength; i++) 
 		{
 			float totalH = 0; // Declara dentro do escopo do loop para evitar conflitos
@@ -100,7 +98,6 @@
 			hidResult[i] = activFunc(totalH);
 		}
 
-		#pragma omp teams distribute parallel for
 		for (i = 0; i < outLength; i++) 
 		{
 			float totalO = 0; // Declara dentro do escopo do loop para evitar conflitos
@@ -120,8 +117,9 @@
 		float inVector[inLength] = {0};
 		float erro, sum, erroMLP = 2*threshold;
 		float deltaHid[hidLength], deltaOut[outLength];
-		
-		while(erroMLP > threshold){
+		omp_set_num_threads(numeroThreads);
+		while(erroMLP > threshold)
+		{
 
 			erroMLP = 0;
 
@@ -144,9 +142,11 @@
 				}
 
 				//calculo do delta de cada neuronio da camada hidden
+				#pragma omp parallel for
 				for(j=0;j<hidLength;j++)
 				{
 					sum = 0;
+					#pragma omp parallel for reduction(+:sum)
 					for(k=0;k<outLength;k++)
 					{
 						sum += deltaOut[k] * matO[k][j];
