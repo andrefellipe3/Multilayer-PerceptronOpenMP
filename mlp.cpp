@@ -146,7 +146,6 @@
 				for(j=0;j<hidLength;j++)
 				{
 					sum = 0;
-					#pragma omp parallel for reduction(+:sum)
 					for(k=0;k<outLength;k++)
 					{
 						sum += deltaOut[k] * matO[k][j];
