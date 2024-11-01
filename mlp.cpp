@@ -5,7 +5,7 @@
 	#include<string.h>
 	#include<time.h>
 	#include<omp.h>
-    int numeroThreads = 2;
+    int numeroThreads = 4;
 	//BIBLIOTECA COM CLASSES DO MLP
 	#include "mlp.hpp"
 	using namespace std;
