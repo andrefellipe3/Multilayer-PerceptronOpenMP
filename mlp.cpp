@@ -86,7 +86,7 @@
 		int i, j;
 		omp_set_num_threads(numeroThreads);
 		
-        #pragma omp target map(to: this->matH, inVector) map(tofrom: this->hidResult)
+
 		#pragma omp teams distribute parallel for
 		for (i = 0; i < hidLength; i++) 
 		{
@@ -100,7 +100,6 @@
 			hidResult[i] = activFunc(totalH);
 		}
 
-        #pragma omp target map(to: this->matO) map(tofrom: this->outResult, this->hidResult)
 		#pragma omp teams distribute parallel for
 		for (i = 0; i < outLength; i++) 
 		{
