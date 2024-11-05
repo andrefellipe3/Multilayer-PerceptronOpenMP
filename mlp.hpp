@@ -2,11 +2,11 @@
 #define MLP_HPP
 
 //DEFINES
-#define inLength 784  //Padrao: 4
-#define hidLength 300 //Padrão: 5
+#define inLength 4  //Padrao: 4
+#define hidLength 5 //Padrão: 5
 #define outLength 3
-#define trainFile "train/train_images3.txt"
-#define testFile "test/test_images3.txt"
+#define trainFile "train/iristrain.txt"
+#define testFile "test/iristest.txt"
 #define learningRate 0.1
 #define threshold 0.01
 

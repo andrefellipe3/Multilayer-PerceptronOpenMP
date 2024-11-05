@@ -74,7 +74,7 @@ void mlp::forward(float* inVector)
     float totalH = 0, totalO = 0;
 
     // Paralelizar o loop para calcular a camada oculta
-    #pragma omp parallel for private(j, totalH) 
+    //#pragma omp parallel for private(j, totalH) 
     for (i = 0; i < hidLength; i++)
     {
         totalH = 0;
@@ -87,7 +87,7 @@ void mlp::forward(float* inVector)
     }
 
     // Paralelizar o loop para calcular a camada de saída
-    #pragma omp parallel for private(j, totalO) 
+    //#pragma omp parallel for private(j, totalO) 
     for (i = 0; i < outLength; i++)
     {
         totalO = 0;
