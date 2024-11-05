@@ -73,7 +73,7 @@ void mlp::forward(float* inVector)
 	int i,j;
 	float totalH = 0, totalO = 0;
 
-    #pragma omp parallel for
+
 	for(i=0;i<hidLength;i++)
 	{
 		totalH = 0;
@@ -85,7 +85,7 @@ void mlp::forward(float* inVector)
 		 hidResult[i] = activFunc(totalH);
 	}
     
-	#pragma omp parallel for
+
 	for(i=0;i<outLength;i++)
 	{
 		totalO = 0;
