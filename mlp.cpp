@@ -68,10 +68,12 @@ float mlp::activFuncDeriv(float z){
 	return (z*(1.0 - z));
 }
 
-void mlp::forward(float* inVector){
-	int i, j;
+void mlp::forward(float* inVector)
+{
+	int i,j;
 	float totalH = 0, totalO = 0;
 
+    #pragma omp parallel for
 	for(i=0;i<hidLength;i++)
 	{
 		totalH = 0;
@@ -82,10 +84,13 @@ void mlp::forward(float* inVector){
 		 totalH += matH[i][inLength]; // + bias
 		 hidResult[i] = activFunc(totalH);
 	}
-
-	for(i=0;i<outLength;i++){
+    
+	#pragma omp parallel for
+	for(i=0;i<outLength;i++)
+	{
 		totalO = 0;
-		for(j=0;j<hidLength;j++){
+		for(j=0;j<hidLength;j++)
+		{
 			totalO += matO[i][j] * hidResult[j]; // + w*z
 		}
 		totalO += matO[i][hidLength]; // + bias
