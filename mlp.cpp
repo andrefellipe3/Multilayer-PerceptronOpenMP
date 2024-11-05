@@ -70,32 +70,34 @@ float mlp::activFuncDeriv(float z){
 
 void mlp::forward(float* inVector)
 {
-	int i,j;
-	float totalH = 0, totalO = 0;
+    int i, j;
+    float totalH = 0, totalO = 0;
 
+    // Paralelizar o loop para calcular a camada oculta
+    #pragma omp parallel for private(j, totalH) 
+    for (i = 0; i < hidLength; i++)
+    {
+        totalH = 0;
+        for (j = 0; j < inLength; j++)
+        {
+            totalH += matH[i][j] * inVector[j]; // + w*x
+        }
+        totalH += matH[i][inLength]; // + bias
+        hidResult[i] = activFunc(totalH);
+    }
 
-	for(i=0;i<hidLength;i++)
-	{
-		totalH = 0;
-		for(j=0;j<(inLength);j++)
-		{
-			totalH += matH[i][j] * inVector[j]; // + w*x
-		}
-		 totalH += matH[i][inLength]; // + bias
-		 hidResult[i] = activFunc(totalH);
-	}
-    
-
-	for(i=0;i<outLength;i++)
-	{
-		totalO = 0;
-		for(j=0;j<hidLength;j++)
-		{
-			totalO += matO[i][j] * hidResult[j]; // + w*z
-		}
-		totalO += matO[i][hidLength]; // + bias
-		outResult[i] = activFunc(totalO);
-	}
+    // Paralelizar o loop para calcular a camada de saída
+    #pragma omp parallel for private(j, totalO) 
+    for (i = 0; i < outLength; i++)
+    {
+        totalO = 0;
+        for (j = 0; j < hidLength; j++)
+        {
+            totalO += matO[i][j] * hidResult[j]; // + w*z
+        }
+        totalO += matO[i][hidLength]; // + bias
+        outResult[i] = activFunc(totalO);
+    }
 }
 
 void mlp::backpropagation(float X[][inLength], float Y[][outLength], int qtTrainCases){
