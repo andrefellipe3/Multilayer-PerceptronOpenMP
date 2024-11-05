@@ -5,7 +5,7 @@
 	#include<string.h>
 	#include<time.h>
 	#include<omp.h>
-    int numeroThreads = 4;
+    int numeroThreads = 8;
 	//BIBLIOTECA COM CLASSES DO MLP
 	#include "mlp.hpp"
 	using namespace std;
@@ -83,6 +83,7 @@
 
 	void mlp::forward(float* inVector) 
 	{
+		omp_set_num_threads(numeroThreads);
 		int i, j;
 		
         #pragma omp parallel for private(j)
@@ -118,7 +119,7 @@
 		float inVector[inLength] = {0};
 		float erro, sum, erroMLP = 2*threshold;
 		float deltaHid[hidLength], deltaOut[outLength];
-		omp_set_num_threads(numeroThreads);
+
 		while(erroMLP > threshold)
 		{
 
