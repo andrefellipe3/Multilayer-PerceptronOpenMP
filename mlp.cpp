@@ -72,9 +72,11 @@ void mlp::forward(float* inVector){
 	int i, j;
 	float totalH = 0, totalO = 0;
 
-	for(i=0;i<hidLength;i++){
+	for(i=0;i<hidLength;i++)
+	{
 		totalH = 0;
-		for(j=0;j<(inLength);j++){
+		for(j=0;j<(inLength);j++)
+		{
 			totalH += matH[i][j] * inVector[j]; // + w*x
 		}
 		 totalH += matH[i][inLength]; // + bias

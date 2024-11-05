@@ -10,7 +10,9 @@
 
 using namespace std;
 
-int main(){
+
+int main()
+{
 	int i, j, k=0, qtTestCases=0, qtTrainCases=0;
 	char c;
 	float vec[inLength] = {0};

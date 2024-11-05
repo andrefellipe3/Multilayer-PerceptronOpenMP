@@ -15,7 +15,7 @@ int countLines(FILE* file);
 
 //CLASSES
 class mlp{
-private:
+public:
 	float matH[hidLength][inLength+1]; //pesos+bias de cada neuronio da camada H em uma linha
 	float matO[outLength][hidLength+1]; //pesos+bias de cada neuronio da camada O em uma linha
 	float outResult[outLength]; //resultados obtidos em cada neuronio da camada O (apos aplicar funcao de ativacao)
