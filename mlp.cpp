@@ -85,7 +85,7 @@
 	{
 		int i, j;
 		
-
+        #pragma omp parallel for private(j) reduction(+:totalH)
 		for (i = 0; i < hidLength; i++) 
 		{
 			float totalH = 0; // Declara dentro do escopo do loop para evitar conflitos
@@ -98,6 +98,7 @@
 			hidResult[i] = activFunc(totalH);
 		}
 
+       #pragma omp parallel for private(j) reduction(+:totalO)
 		for (i = 0; i < outLength; i++) 
 		{
 			float totalO = 0; // Declara dentro do escopo do loop para evitar conflitos
